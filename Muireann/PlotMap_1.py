@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 #This is going to be the Python simulation node. Currently just a code to plot the trajectory of the modeled car
 #as calculated by the MPC node in Julia, and the path follower code used as another node
 
@@ -20,9 +20,12 @@ import math
 
 #remove or add the message type
 from std_msgs.msg import Float64MultiArray
- 
+
+received_data=[0,0,0,0,0,0]
+
 def callback(data):
     print rospy.get_name(), "I heard %f"%str(data.data)
+    received_data=data.data
 
 
 
@@ -116,17 +119,17 @@ def plotting_func(data):
     return obj, wheels
        
         
-def run(niter=100):
+def run():
     #to animate the figure
     i=1
     fig = plt.figure()
     ax = plt.gca()
     plt.ion()
 
-    z0=np.array(data[:4)
+    z0=np.array(data[:4])
     u=np.array(data[4:])
     
-    obj, wheels=plotting_func(data)
+    obj, wheels=plotting_func(received_data)
 
 
     h1 = ax.plot(obj[0], obj[4],'b-')[0]
@@ -140,10 +143,9 @@ def run(niter=100):
     plt.show()
     tic = time.time()
 
-    for ii in range(niter):
-
+    while not rospy.is_shutdown():
         # update the xy data
-        obj,wheels = plotting_func(data)
+        obj,wheels = plotting_func(received_data)
         h1.set_data(obj[0], obj[4])
         h2.set_data(obj[1], obj[5])
         h3.set_data(obj[2], obj[6])
@@ -160,19 +162,15 @@ def run(niter=100):
 
 
 if __name__ == '__main__':
-    #try:
+    listener()
+    rospy.spin()
     run()
-    #except:
-        # print("error!")
+
 
 def listener():
     rospy.init_node('listener')
     sub=rospy.Subscriber("pts", Float64MultiArray, callback)
 
- 
-if __name__=='__main__':
-    listener()
-    rospy.spin()
     
     
 
