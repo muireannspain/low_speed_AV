@@ -57,13 +57,13 @@ def callback(data):
 
 
 
-#opened_file = open('Waypoints.csv')
-#from csv import reader
-#read_file = reader(opened_file)
-#wayp = list(read_file)
-#n=len(wayp)
-#waypoints = [list(map(float,i)) for i in wayp]
-#waypoints=np.array(waypoints)
+opened_file = open('Waypoints.csv')
+from csv import reader
+read_file = reader(opened_file)
+wayp = list(read_file)
+n=len(wayp)
+waypoints = [list(map(float,i)) for i in wayp]
+waypoints=np.array(waypoints)
 
 def plotting_func(data):
     #returns the next x,y coordinates of the car
@@ -144,7 +144,7 @@ def run():
     h4 = ax.plot(obj[3], obj[7], 'b-')[0]
     h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],'r-')[0]
     h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],'r-')[0]
-    # h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'mo')
+    h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'mo')
 
     plt.show()
     tic = time.time()
