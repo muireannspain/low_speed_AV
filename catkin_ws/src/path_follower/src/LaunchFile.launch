@@ -1,4 +1,4 @@
 <launch>
-	<node name="path_follower" pkg="path_follower" type="pathfollower_jl_ROS" />
-	<node name="visualization" pkg="path_follower" type="PlotMap_1" />
+	<node name="path_follower" pkg="path_follower" type="pathfollower_jl_ROS.jl" />
+	<node name="visualization" pkg="path_follower" type="PlotMap_1.py" />
 </launch>
