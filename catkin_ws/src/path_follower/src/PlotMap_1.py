@@ -20,8 +20,8 @@ import math
 
 #remove or add the message type
 from std_msgs.msg import Float64MultiArray
-#received data in format [X, Y, velocity, heading][velocity steering angle][Open Loop Prediction from each step of MPC path follower]
-received_data=[0,0,0,0,0,0]
+#received data in format [X, Y, velocity, heading][velocity steering angle]
+received_data=[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],]
 
 def callback(data):
     global received_data
@@ -132,8 +132,11 @@ def run():
 
     print("Plt show")
 
-    z0=np.array(received_data[:4])
-    u=np.array(received_data[4:])
+    z0=np.array(received_data[:4,0])
+    u=np.array(received_data[4:,0])
+    #receive open loop X and Y predictions from MPC function for plotting
+    OL_X=np.array(received_data[0,:])
+    OL_Y=np.array(received_data[1,:])
 
     obj, wheels=plotting_func(received_data)
 
@@ -145,6 +148,7 @@ def run():
     h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],'r-')[0]
     h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],'r-')[0]
     h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'mo')
+    h10=ax.plot(OL_X, OL_Y, 'r-')[0]
 
     plt.show()
     tic = time.time()
@@ -160,6 +164,7 @@ def run():
         h4.set_data(obj[3], obj[7])
         h5.set_data([wheels[0],wheels[1]],[wheels[4],wheels[5]])
         h7.set_data([wheels[2],wheels[3]],[wheels[6],wheels[7]])
+        h10.set_data(OL_X, OL_Y)
 
         start = time.time()
         i=i+1
