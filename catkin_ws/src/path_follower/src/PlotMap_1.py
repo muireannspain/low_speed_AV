@@ -20,7 +20,7 @@ import math
 
 #remove or add the message type
 from std_msgs.msg import Float64MultiArray
-
+#received data in format [X, Y, velocity, heading][velocity steering angle][Open Loop Prediction from each step of MPC path follower]
 received_data=[0,0,0,0,0,0]
 
 def callback(data):
