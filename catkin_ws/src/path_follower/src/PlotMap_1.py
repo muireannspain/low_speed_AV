@@ -57,7 +57,7 @@ def callback(data):
 
 
 
-opened_file = open('Waypoints.csv')
+opened_file = open('EllipseWaypoints.csv')
 from csv import reader
 read_file = reader(opened_file)
 wayp = list(read_file)
