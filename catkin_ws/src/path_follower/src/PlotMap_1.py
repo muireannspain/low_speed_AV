@@ -6,10 +6,10 @@
 import matplotlib
 #matplotlib.use('TkAgg',warn=False, force=True)
 #import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt 
 #matplotlib.use('GTK3Agg')
 import numpy as np
-#from PIL import Image
+#from PIL import Image 
 #import pandas as pd
 import csv
 import time
