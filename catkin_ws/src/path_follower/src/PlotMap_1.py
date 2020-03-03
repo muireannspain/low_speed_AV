@@ -1,60 +1,30 @@
 #!/usr/bin/env python
-#This is going to be the Python simulation node. Currently just a code to plot the trajectory of the modeled car
-#as calculated by the MPC node in Julia, and the path follower code used as another node
 
 # importing libraries
 import matplotlib
-#matplotlib.use('TkAgg',warn=False, force=True)
-#import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
-#matplotlib.use('GTK3Agg')
 import numpy as np
-#from PIL import Image
-#import pandas as pd
 import csv
 import time
-# import ipdb
-#from IPython import display
 import rospy
 import math
 
 #remove or add the message type
 from std_msgs.msg import Float64MultiArray
+from cloud_msgs.msg import state
+received_data_MPC=[0,0,0,0,0,0]
+received_data_localization=[0,0]
 
-received_data=[0,0,0,0,0,0]
-
-def callback(data):
-    global received_data
+def callbackMPC(data):
+    global received_data_MPC
     # print rospy.get_name(), "I heard %f"%str(data.data)
-    received_data=data.data
-    # print(received_data)
-
-
-
-# #open map image and resize to size of carpark
-# image = Image.open('Map.png')
-# # Read Images
-# new_image = image.resize((300, 200))
-# new_image.save('Map_resize.png')
-# plt.imshow(new_image)
-
-#load in MPC generated data for X, Y, velocity and heading at each point
-#opened_file = open('Z.csv')
-#from csv import reader
-#read_file = reader(opened_file)
-#Z = list(read_file)
-#n=len(Z)
-#z_list = [list(map(float,i)) for i in Z]
-#z_list=np.array(z_list)
-
-#opened_file = open('U.csv')
-#read_file = reader(opened_file)
-#u = list(read_file)
-#n=len(u)
-#u_list = [list(map(float,i)) for i in u]
-#u_list=np.array(u_list)
-#u=np.array(u_list)
-
+    received_data_MPC=data.data
+    # print(received_data_MPC)
+    
+    
+def callbackLocalization(data):
+    global received_data_localization
+    received_data_localization=data.data
 
 
 opened_file = open('/home/uav/catkin_ws/src/path_follower/src/RealWaypoints.csv')
@@ -122,7 +92,8 @@ def plotting_func(data):
 
 
 def run():
-    global received_data
+    global received_data_MPC
+    global received_data_localization
     #to animate the figure
     i=1
     fig = plt.figure()
@@ -131,10 +102,11 @@ def run():
 
 
     print("Plt show")
-
-    z0=np.array(received_data[:4])
-    u=np.array(received_data[4:])
-
+    #temporarily setting plotting function input data [x,y] from localization and [velocity,heading] and[acceeration, steering angle] from MPC
+    
+    received_data=np.array([received_data_localization[0],received_data_localization[1],received_data_MPC[2],received_data_MPC[3],received_data_MPC[4],received_data_MPC[5]])
+    #u=np.array(received_dataMPC[4:])
+    
     obj, wheels=plotting_func(received_data)
 
 
@@ -151,7 +123,7 @@ def run():
 
     while not rospy.is_shutdown():
 
-        print(received_data)
+        print(received_data_MPC)
         # update the xy data
         obj,wheels = plotting_func(received_data)
         h1.set_data(obj[0], obj[4])
@@ -170,14 +142,20 @@ def run():
 
 
 
-def listener():
+def listener_MPC():
     rospy.init_node('listener_1')
-    sub=rospy.Subscriber("pts", Float64MultiArray, callback)
-    # print("listener")
+    sub=rospy.Subscriber("pts", Float64MultiArray, callbackMPC)
+
+    
+def listener_localization():
+    rospy.init_node('listener_2')
+    sub=rospy.Subscriber("localization", state, callbackLocalization)
+
 
 if __name__ == '__main__':
     try:
-        listener()
+        listener_MPC()
+        listener_localization()
         # rospy.spin()
         run()
     except rospy.ROSInterruptException:
