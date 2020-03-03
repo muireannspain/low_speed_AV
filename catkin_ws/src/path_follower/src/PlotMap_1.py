@@ -6,10 +6,10 @@
 import matplotlib
 #matplotlib.use('TkAgg',warn=False, force=True)
 #import matplotlib.image as mpimg
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 #matplotlib.use('GTK3Agg')
 import numpy as np
-#from PIL import Image 
+#from PIL import Image
 #import pandas as pd
 import csv
 import time
@@ -57,7 +57,7 @@ def callback(data):
 
 
 
-opened_file = open('EllipseWaypoints.csv')
+opened_file = open('/home/uav/catkin_ws/src/path_follower/src/RealWaypoints.csv')
 from csv import reader
 read_file = reader(opened_file)
 wayp = list(read_file)
