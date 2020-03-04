@@ -1,33 +1,33 @@
-#!/usr/bin/env julia
+# This version is Julia code, printing the states out
 
-# works with simulator
+#!/usr/bin/env julia
 using JuMP
 using Ipopt
 using CSV
 # using IterTools
 # using LinearAlgebra
-using RobotOS
-@rosimport std_msgs.msg: Float64MultiArray
+# using RobotOS
+# @rosimport std_msgs.msg: Float64MultiArray
 # @rosimport cloud_msgs.msg: state
-rostypegen()
-using std_msgs.msg
+# rostypegen()
+# using std_msgs.msg
 # using cloud_msgs.msg
 
 
-global tmp
-tmp = 0.
+# global tmp
+# tmp = 0.
 
-function loop(pub_obj)
-    loop_rate = Rate(5.0)
-    while ! is_shutdown()
-        println("Start Looping")
-        println("tmp", tmp)
+# function loop(pub_obj)
+#     loop_rate = Rate(5.0)
+#     while ! is_shutdown()
+        # println("Start Looping")
+        # println("tmp", tmp)
 
     	#----------------------------------------MPC-------------------------
 
 
         # Import waypoints
-        global arr = CSV.read("/home/uav/catkin_ws/src/path_follower/src/EllipseWaypoints.csv")
+        global arr = CSV.read("/home/uav/catkin_ws/src/path_follower/src/RealWaypoints.csv")
         global waypoints = (convert(Matrix{Float64}, arr))'
         X = waypoints[1,:]
         Y = waypoints[2,:]
@@ -154,34 +154,34 @@ function loop(pub_obj)
     	    i = i + 1;
 
             z_u = [z;u]
-            # println(z_u)
-
-    	    pub_data = Float64MultiArray()
-    	    pub_data.data = z_u
-    	    publish(pub_obj, pub_data)
+            println(z_u)
+            #
+    	    # pub_data = Float64MultiArray()
+    	    # pub_data.data = z_u
+    	    # publish(pub_obj, pub_data)
     		# println("Published")
 
     	end
     	#--------------------------------------MPC end--------------------------
-        rossleep(loop_rate)
-    end
-end
+        # rossleep(loop_rate)
+    # end
+# end
 
 # function callback(msg)
 #     global tmp
 #     tmp = msg.x
 # end
-
-function main()
-    init_node("rosjl_example")
-    # tmp = state()
-    pub = Publisher{Float64MultiArray}("pts", queue_size=10)
-    # pub = Publisher{state}("test",queue_size=10)
-    # sub = Subscriber{state}("localization", callback, queue_size=10)
-    # spin()
-    loop(pub)
-end
-
-if ! isinteractive()
-    main()
-end
+#
+# function main()
+#     init_node("rosjl_example")
+#     # tmp = state()
+#     pub = Publisher{Float64MultiArray}("pts", queue_size=10)
+#     # pub = Publisher{state}("test",queue_size=10)
+#     sub = Subscriber{state}("localization", callback, queue_size=10)
+#     # spin()
+#     loop(pub)
+# end
+#
+# if ! isinteractive()
+#     main()
+# end
