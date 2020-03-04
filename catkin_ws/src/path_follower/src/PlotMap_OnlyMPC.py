@@ -4,17 +4,10 @@
 
 # importing libraries
 import matplotlib
-#matplotlib.use('TkAgg',warn=False, force=True)
-#import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
-#matplotlib.use('GTK3Agg')
 import numpy as np
-#from PIL import Image
-#import pandas as pd
 import csv
 import time
-# import ipdb
-#from IPython import display
 import rospy
 import math
 
@@ -25,36 +18,7 @@ received_data=[0,0,0,0,0,0]
 
 def callback(data):
     global received_data
-    # print rospy.get_name(), "I heard %f"%str(data.data)
     received_data=data.data
-    # print(received_data)
-
-
-
-# #open map image and resize to size of carpark
-# image = Image.open('Map.png')
-# # Read Images
-# new_image = image.resize((300, 200))
-# new_image.save('Map_resize.png')
-# plt.imshow(new_image)
-
-#load in MPC generated data for X, Y, velocity and heading at each point
-#opened_file = open('Z.csv')
-#from csv import reader
-#read_file = reader(opened_file)
-#Z = list(read_file)
-#n=len(Z)
-#z_list = [list(map(float,i)) for i in Z]
-#z_list=np.array(z_list)
-
-#opened_file = open('U.csv')
-#read_file = reader(opened_file)
-#u = list(read_file)
-#n=len(u)
-#u_list = [list(map(float,i)) for i in u]
-#u_list=np.array(u_list)
-#u=np.array(u_list)
-
 
 
 opened_file = open('/home/uav/catkin_ws/src/path_follower/src/RealWaypoints.csv')
