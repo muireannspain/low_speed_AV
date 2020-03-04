@@ -11,7 +11,7 @@ import math
 
 #remove or add the message type
 from std_msgs.msg import Float64MultiArray
-fromcloud_msgs.msg import state
+from cloud_msgs.msg import state
 
 received_data_MPC=[0,0,0,0,0,0]
 received_data_localization=[0,0]
@@ -21,10 +21,13 @@ def callbackMPC(data):
     received_data=data.data
 
 def callbackLocalization(data):
-    global received_data_localization
-    received_data_localization=data.data
-    
-    
+    # global received_data_localization
+    # received_data_localization=[data.x,data.y]
+    received_data_localization[0] = data.x
+    received_data_localization[1] = data.y
+    print("loc sub", received_data_localization)
+
+
 opened_file = open('/home/uav/catkin_ws/src/path_follower/src/RealWaypoints.csv')
 from csv import reader
 read_file = reader(opened_file)
@@ -102,8 +105,7 @@ def run():
     #using [x,y] from localization node and [velocity, heading][acceeration, steering angle] from MPC
     #z0=np.array(received_data[:4])
     #u=np.array(received_data[4:])
-    received_data=[received_data_localization[0],received_data_localization[1],received_data_MPC[2],received_data_MPC[3],received_data_MPC[4],received_data_MPC[5]]
-    obj, wheels=plotting_func(received_data)
+    obj, wheels=plotting_func([0,0,0,0,0,0])
 
 
     h1 = ax.plot(obj[0], obj[4],'b-')[0]
@@ -118,6 +120,7 @@ def run():
     tic = time.time()
 
     while not rospy.is_shutdown():
+        received_data=[received_data_localization[0],received_data_localization[1],received_data_MPC[2],received_data_MPC[3],received_data_MPC[4],received_data_MPC[5]]
 
         print(received_data)
         # update the xy data
@@ -134,23 +137,24 @@ def run():
 
         ax.relim()
         ax.autoscale_view()
+        ax.axis("equal")
         fig.canvas.draw()
 
 
 
 def listener_MPC():
-    rospy.init_node('listener_1')
+
     sub=rospy.Subscriber("pts", Float64MultiArray, callbackMPC)
     # print("listener")
 
 def listener_localization():
-    rospy.init_node('listener_2')
     sub=rospy.Subscriber("localization", state, callbackLocalization)
     # print("listener")
 
 
 if __name__ == '__main__':
     try:
+        rospy.init_node('listener_1')
         listener_MPC()
         listener_localization()
         # rospy.spin()
