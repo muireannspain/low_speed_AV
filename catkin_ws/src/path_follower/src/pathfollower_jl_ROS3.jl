@@ -182,10 +182,10 @@ function callback(msg)
     # global tmp
     # tmp = msg.x
     setvalue(z0_1, msg.x)
-    setvalue(z0_2, msg.y)
+    setvalue(z0_2, msg.z)
     global z0
     z0[1] = msg.x
-    z0[2] = msg.y
+    z0[2] = msg.z
     # setvalue()
 end
 #
