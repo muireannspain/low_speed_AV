@@ -1,16 +1,16 @@
 #!/usr/bin/env julia
 
-# This version has a subscriber, working with ROSbag
+# This version has a subscriber and Publisher
 using JuMP
 using Ipopt
 using CSV
 # using IterTools
 # using LinearAlgebra
 using RobotOS
-@rosimport std_msgs.msg: Float64MultiArray
+# @rosimport std_msgs.msg: Float64MultiArray
 @rosimport cloud_msgs.msg: state
+@rosimport cloud_msgs.msg: mpc_msg
 rostypegen()
-using std_msgs.msg
 using cloud_msgs.msg
 
 
@@ -164,9 +164,11 @@ function loop(pub_obj)
 
             z_u = [z0;u_command]
             println(z_u)
-            #
-    	    pub_data = Float64MultiArray()
-    	    pub_data.data = z_u
+
+    	    pub_data = mpc_msg()
+    	    pub_data.z_u = z_u
+            pub_data.pre_x = zOpti[1,:]
+            pub_data.pre_y = zOpti[2,:]
     	    publish(pub_obj, pub_data)
     		println("Published")
 
@@ -190,7 +192,7 @@ end
 function main()
     init_node("MPC")
     # tmp = state()
-    pub = Publisher{Float64MultiArray}("pts", queue_size=10)
+    pub = Publisher{mpc_msg}("mpc", queue_size=10)
     # pub = Publisher{state}("test",queue_size=10)
     # pub = 0
     sub = Subscriber{state}("localization", callback, queue_size=10)

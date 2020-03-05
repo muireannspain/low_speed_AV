@@ -11,7 +11,7 @@ import math
 
 #remove or add the message type
 #from std_msgs.msg import Float64MultiArray
-from cloud_msgs.msg import mpc_msg.msg
+from cloud_msgs.msg import mpc_msg
 from cloud_msgs.msg import state
 
 received_data_MPC=[0,0,0,0,0,0]
@@ -141,7 +141,7 @@ def run():
         h4.set_data(obj[3], obj[7])
         h5.set_data([wheels[0],wheels[1]],[wheels[4],wheels[5]])
         h7.set_data([wheels[2],wheels[3]],[wheels[6],wheels[7]])
-        h10=set_data(OL_plotX,OL_plotY)
+        h10.set_data(OL_plotX,OL_plotY)
 
         start = time.time()
         i=i+1
@@ -155,7 +155,7 @@ def run():
 
 def listener_MPC():
 
-    sub=rospy.Subscriber("mpc", mpc_msg.msg, callbackMPC)
+    sub=rospy.Subscriber("mpc", mpc_msg, callbackMPC)
     # print("listener")
 
 def listener_localization():
