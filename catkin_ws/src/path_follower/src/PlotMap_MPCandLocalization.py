@@ -121,10 +121,10 @@ def run():
     h2 = ax.plot(obj[1], obj[5], 'b-')[0]
     h3 = ax.plot(obj[2], obj[6], 'b-')[0]
     h4 = ax.plot(obj[3], obj[7], 'b-')[0]
-    h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],'r-')[0]
-    h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],'r-')[0]
+    h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],'r-',linewidth=10)[0]
+    h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],'r-',linewidth=10)[0]
     h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'mo')
-    h10=ax.plot(OL_plotX,OL_plotY,'g-')[0]
+    h10=ax.plot(OL_plotX,OL_plotY,'g-',linewidth=10)[0]
 
     plt.show()
     tic = time.time()
