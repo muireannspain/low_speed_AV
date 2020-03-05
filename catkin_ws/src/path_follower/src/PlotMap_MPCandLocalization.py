@@ -10,22 +10,29 @@ import rospy
 import math
 
 #remove or add the message type
-from std_msgs.msg import Float64MultiArray
+#from std_msgs.msg import Float64MultiArray
+from cloud_msgs.msg import mpc_msg.msg
 from cloud_msgs.msg import state
 
 received_data_MPC=[0,0,0,0,0,0]
 received_data_localization=[0,0]
+OL_plotX=[0,0,0,0,0,0,0,0,0,0,0]
+OL_plotY=[0,0,0,0,0,0,0,0,0,0,0]
 
 def callbackMPC(data):
     global received_data_MPC
-    received_data=data.data
+    global OL_plotX
+    global OL_plotY
+    OL_plotX=data.pre_x
+    OL_plotY=data.pre_y
+    received_data_MPC=data.z_u
 
 def callbackLocalization(data):
     # global received_data_localization
     # received_data_localization=[data.x,data.y]
     received_data_localization[0] = data.x
     received_data_localization[1] = data.y
-    print("loc sub", received_data_localization)
+    #print("loc sub", received_data_localization)
 
 
 opened_file = open('/home/uav/catkin_ws/src/path_follower/src/RealWaypoints.csv')
@@ -93,6 +100,8 @@ def plotting_func(data):
 def run():
     global received_data_MPC
     global received_data_localization
+    global OL_plotX
+    global OL_plotY
     #to animate the figure
     i=1
     fig = plt.figure()
@@ -115,6 +124,7 @@ def run():
     h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],'r-')[0]
     h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],'r-')[0]
     h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'mo')
+    h10=ax.plot(OL_plotX,OL_plotY,'g-')[0]
 
     plt.show()
     tic = time.time()
@@ -131,6 +141,7 @@ def run():
         h4.set_data(obj[3], obj[7])
         h5.set_data([wheels[0],wheels[1]],[wheels[4],wheels[5]])
         h7.set_data([wheels[2],wheels[3]],[wheels[6],wheels[7]])
+        h10=set_data(OL_plotX,OL_plotY)
 
         start = time.time()
         i=i+1
@@ -144,7 +155,7 @@ def run():
 
 def listener_MPC():
 
-    sub=rospy.Subscriber("pts", Float64MultiArray, callbackMPC)
+    sub=rospy.Subscriber("mpc", mpc_msg.msg, callbackMPC)
     # print("listener")
 
 def listener_localization():
