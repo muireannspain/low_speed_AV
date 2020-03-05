@@ -31,7 +31,7 @@ def callbackLocalization(data):
     # global received_data_localization
     # received_data_localization=[data.x,data.y]
     received_data_localization[0] = data.x
-    received_data_localization[1] = data.y
+    received_data_localization[1] = data.z
     #print("loc sub", received_data_localization)
 
 
