@@ -12,10 +12,12 @@ import math
 #remove or add the message type
 #from std_msgs.msg import Float64MultiArray
 from cloud_msgs.msg import mpc_msg
-from cloud_msgs.msg import state
+from cloud_msgs.msg import convert_msg
+#from nav_msgs.msg import Odometry
 
 received_data_MPC=[0,0,0,0,0,0]
-received_data_localization=[0,0]
+#x,y,v,head from conversion node
+received_data_localization=[0,0,0,0]
 OL_plotX=[0,0,0,0,0,0,0,0,0,0,0]
 OL_plotY=[0,0,0,0,0,0,0,0,0,0,0]
 
@@ -31,11 +33,15 @@ def callbackLocalization(data):
     # global received_data_localization
     # received_data_localization=[data.x,data.y]
     received_data_localization[0] = data.x
-    received_data_localization[1] = data.z
+    received_data_localization[1] = data.y
+    received_data_localization[2] = data.v
+    received_data_localization[3] = data.hd
+
+
     #print("loc sub", received_data_localization)
 
 
-opened_file = open('/home/uav/catkin_ws/src/path_follower/src/RealWaypoints.csv')
+opened_file = open('/home/uav/catkin_ws/src/path_follower/src/xy_localization.csv')
 from csv import reader
 read_file = reader(opened_file)
 wayp = list(read_file)
@@ -121,16 +127,16 @@ def run():
     h2 = ax.plot(obj[1], obj[5], 'b-')[0]
     h3 = ax.plot(obj[2], obj[6], 'b-')[0]
     h4 = ax.plot(obj[3], obj[7], 'b-')[0]
-    h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],'r-',linewidth=10)[0]
-    h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],'r-',linewidth=10)[0]
-    h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'mo')
-    h10=ax.plot(OL_plotX,OL_plotY,'g-',linewidth=10)[0]
+    h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],'r-',linewidth=3)[0]
+    h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],'r-',linewidth=3)[0]
+    h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'm.')
+    h10=ax.plot(OL_plotX,OL_plotY,'g-',linewidth=3)[0]
 
     plt.show()
     tic = time.time()
 
     while not rospy.is_shutdown():
-        received_data=[received_data_localization[0],received_data_localization[1],received_data_MPC[2],received_data_MPC[3],received_data_MPC[4],received_data_MPC[5]]
+        received_data=[received_data_localization[0],received_data_localization[1],received_data_localization[2],received_data_localization[3],received_data_MPC[4],received_data_MPC[5]]
 
         print(received_data)
         # update the xy data
@@ -159,7 +165,7 @@ def listener_MPC():
     # print("listener")
 
 def listener_localization():
-    sub=rospy.Subscriber("localization", state, callbackLocalization)
+    sub=rospy.Subscriber("conversion", convert_msg, callbackLocalization)
     # print("listener")
 
 
