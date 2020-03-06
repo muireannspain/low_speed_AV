@@ -8,7 +8,7 @@ using CSV
 # using LinearAlgebra
 using RobotOS
 # @rosimport std_msgs.msg: Float64MultiArray
-@rosimport cloud_msgs.msg: state
+@rosimport cloud_msgs.msg: convert_msg
 @rosimport cloud_msgs.msg: mpc_msg
 rostypegen()
 using cloud_msgs.msg
@@ -30,14 +30,14 @@ TS = 0.2;
 # initial state
 # heading = atan((Y[2]-Y[1]) / (X[2] - X[1]));
 heading = 0
-global z0 = [X[1]; Y[1]; 0; heading];
 
 # end target
 global final = waypoints[:,end];
 
 # initialization
+global z0 = [X[1]; Y[1]; 0; heading];
 # global z  = z0;
-global z_list = z0;
+# global z_list = z0;
 
 #set reference velocity
 global v_ref = 5;
@@ -116,7 +116,7 @@ function loop(pub_obj)
     	#while the model has not reached within a certain tolerance of the end
     	#point
     	if norm(z0[1:2] - final) > 0.2
-            println(norm(z0[1:2] - final))
+            # println(norm(z0[1:2] - final))
 
             # println("z[1,2]",z[1:2],"final",final)
             # println("norm:",norm(z[1:2] - final))
@@ -159,7 +159,7 @@ function loop(pub_obj)
     	    u_command = uOpti[:, 1];
     	    # z0 = zOpti[:, 2];
 
-    	    global z_list = [z_list, z0];
+    	    # global z_list = [z_list, z0];
     	    i = i + 1;
 
             z_u = [z0;u_command]
@@ -182,20 +182,24 @@ function callback(msg)
     # global tmp
     # tmp = msg.x
     setvalue(z0_1, msg.x)
-    setvalue(z0_2, msg.z)
+    setvalue(z0_2, msg.y)
+    setvalue(z0_3, msg.v)
+    setvalue(z0_4, msg.hd)
     global z0
     z0[1] = msg.x
-    z0[2] = msg.z
+    z0[2] = msg.y
+    z0[3] = msg.v
+    z0[4] = msg.hd
     # setvalue()
 end
 #
 function main()
     init_node("MPC")
     # tmp = state()
+    sub = Subscriber{convert_msg}("conversion", callback, queue_size=10)
     pub = Publisher{mpc_msg}("mpc", queue_size=10)
     # pub = Publisher{state}("test",queue_size=10)
     # pub = 0
-    sub = Subscriber{state}("localization", callback, queue_size=10)
     # spin()
     loop(pub)
 end
