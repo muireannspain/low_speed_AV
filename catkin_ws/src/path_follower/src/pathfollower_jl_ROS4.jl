@@ -8,7 +8,7 @@ using CSV
 # using LinearAlgebra
 using RobotOS
 # @rosimport std_msgs.msg: Float64MultiArray
-@rosimport cloud_msgs.msg: convert_msg
+# @rosimport cloud_msgs.msg: convert_msg
 @rosimport cloud_msgs.msg: mpc_msg
 rostypegen()
 using cloud_msgs.msg
@@ -40,7 +40,7 @@ global z0 = [X[1]; Y[1]; 0; heading];
 # global z_list = z0;
 
 #set reference velocity
-global v_ref = 5;
+global v_ref = 1;
 
 # Define horizon
 N = 10;
@@ -157,7 +157,7 @@ function loop(pub_obj)
 
 
     	    u_command = uOpti[:, 1];
-    	    # z0 = zOpti[:, 2];
+    	    z0 = zOpti[:, 2];
 
     	    # global z_list = [z_list, z0];
     	    i = i + 1;
@@ -172,31 +172,40 @@ function loop(pub_obj)
     	    publish(pub_obj, pub_data)
     		println("Published")
 
+            setvalue(z0_1, z0[1,1])
+            setvalue(z0_2, z0[2,1])
+            setvalue(z0_3, z0[3,1])
+            setvalue(z0_4, z0[4,1])
+            z0[1] = z0[1,1]
+            z0[2] = z0[2,1]
+            z0[3] = z0[3,1]
+            z0[4] = z0[4,1]
+
     	end
     	#--------------------------------------MPC end--------------------------
         rossleep(loop_rate)
     end
 end
 
-function callback(msg)
-    # global tmp
-    # tmp = msg.x
-    setvalue(z0_1, msg.x)
-    setvalue(z0_2, msg.y)
-    setvalue(z0_3, msg.v)
-    setvalue(z0_4, msg.hd)
-    global z0
-    z0[1] = msg.x
-    z0[2] = msg.y
-    z0[3] = msg.v
-    z0[4] = msg.hd
-    # setvalue()
-end
+# function callback(msg)
+#     # global tmp
+#     # tmp = msg.x
+#     setvalue(z0_1, msg.x)
+#     setvalue(z0_2, msg.y)
+#     setvalue(z0_3, msg.v)
+#     setvalue(z0_4, msg.hd)
+#     global z0
+#     z0[1] = msg.x
+#     z0[2] = msg.y
+#     z0[3] = msg.v
+#     z0[4] = msg.hd
+#     # setvalue()
+# end
 #
 function main()
     init_node("MPC")
     # tmp = state()
-    sub = Subscriber{convert_msg}("conversion", callback, queue_size=10)
+    # sub = Subscriber{convert_msg}("conversion", callback, queue_size=10)
     pub = Publisher{mpc_msg}("mpc", queue_size=10)
     # pub = Publisher{state}("test",queue_size=10)
     # pub = 0

@@ -87,15 +87,15 @@ def plotting_func(data):
 
     # calculate the wheel
     # left wheel
-    w_f_l_x = x_f_l+(lw/2)*np.cos(data[3]-data[5])
-    w_r_l_x = x_f_l-(lw/2)*np.cos(data[3]-data[5])
-    w_f_l_y = y_f_l+(lw/2)*np.sin(data[3]-data[5])
-    w_r_l_y = y_f_l-(lw/2)*np.sin(data[3]-data[5])
+    w_f_l_x = x_f_l+(lw/2)*np.cos(data[3]+data[5])
+    w_r_l_x = x_f_l-(lw/2)*np.cos(data[3]+data[5])
+    w_f_l_y = y_f_l+(lw/2)*np.sin(data[3]+data[5])
+    w_r_l_y = y_f_l-(lw/2)*np.sin(data[3]+data[5])
     # right wheel
-    w_f_r_x = x_f_r+(lw/2)*np.cos(data[3]-data[5])
-    w_r_r_x = x_f_r-(lw/2)*np.cos(data[3]-data[5])
-    w_f_r_y = y_f_r+(lw/2)*np.sin(data[3]-data[5])
-    w_r_r_y = y_f_r-(lw/2)*np.sin(data[3]-data[5])
+    w_f_r_x = x_f_r+(lw/2)*np.cos(data[3]+data[5])
+    w_r_r_x = x_f_r-(lw/2)*np.cos(data[3]+data[5])
+    w_f_r_y = y_f_r+(lw/2)*np.sin(data[3]+data[5])
+    w_r_r_y = y_f_r-(lw/2)*np.sin(data[3]+data[5])
 
     # Draw the wheel
     obj=np.array([x_d1,x_d2,x_d3,x_d4,y_d1,y_d2,y_d3,y_d4])
