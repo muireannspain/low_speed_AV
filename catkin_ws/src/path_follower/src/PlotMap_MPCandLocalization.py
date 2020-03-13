@@ -138,7 +138,7 @@ def run():
     while not rospy.is_shutdown():
         received_data=[received_data_localization[0],received_data_localization[1],received_data_localization[2],received_data_localization[3],received_data_MPC[4],received_data_MPC[5]]
 
-        print(received_data)
+        #print(received_data)
         # update the xy data
         obj,wheels = plotting_func(received_data)
         h1.set_data(obj[0], obj[4])

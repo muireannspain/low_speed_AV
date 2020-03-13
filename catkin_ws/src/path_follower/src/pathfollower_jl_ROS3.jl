@@ -40,7 +40,7 @@ global z0 = [X[1]; Y[1]; 0; heading];
 # global z_list = z0;
 
 #set reference velocity
-global v_ref = 5;
+global v_ref = 0.2;
 
 # Define horizon
 N = 10;
@@ -128,7 +128,7 @@ function loop(pub_obj)
     		current_idx = (find(x->x == minimum(current_dis),current_dis))[1];
             # println("minimum of current_dis:",minimum(current_dis))
     		# println("Current index:", current_idx)
-    		goal_idx    = current_idx + 2;
+    		goal_idx    = current_idx + 10;
             # Define goal state constraints (X,Y,V,Heading)
             goal = [waypoints[:, goal_idx]; v_ref];
             # Set value in model

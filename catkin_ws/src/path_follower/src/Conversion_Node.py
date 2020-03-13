@@ -4,6 +4,7 @@
 import rospy
 import math
 import tf
+import time
 
 # ROS messages.
 #subscribe to
@@ -71,11 +72,14 @@ class QuatToEuler():
         # print(t3)
         x3 = msg.pose.pose.position.x
         z3 = msg.pose.pose.position.z
+        print('roll, pitch,yaw')
+        print(roll, pitch, yaw)
+
 
         self.converted_msg.x = x3
         self.converted_msg.y = z3
         self.converted_msg.v = velocity(t3, x3, z3)
-        self.converted_msg.hd = pitch + math.pi/2
+        self.converted_msg.hd = pitch
 
         self.pub_localization.publish(self.converted_msg)
 
