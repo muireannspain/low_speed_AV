@@ -5,6 +5,7 @@ import rospy
 import math
 import tf
 import time
+import numpy as np
 
 # ROS messages.
 #subscribe to
@@ -54,6 +55,7 @@ def velocity(t3,x3,z3):
 
 class QuatToEuler():
     def __init__(self):
+        self.yaw_hist = []
 
         # Create subscribers and publishers.
         sub_odom  = rospy.Subscriber("localization", Odometry, self.odom_callback)
@@ -61,25 +63,38 @@ class QuatToEuler():
 
         self.converted_msg = convert_msg()
 
+
         rospy.spin()
 
     # Odometry callback function.
     def odom_callback(self, msg):
         # Convert quaternions to Euler angles.
-        (roll, pitch, yaw) = tf.transformations.euler_from_quaternion([msg.pose.pose.orientation.x, msg.pose.pose.orientation.y, msg.pose.pose.orientation.z, msg.pose.pose.orientation.w])
+        (roll, pitch, yaw) = tf.transformations.euler_from_quaternion([msg.pose.pose.orientation.x, msg.pose.pose.orientation.z, msg.pose.pose.orientation.y, msg.pose.pose.orientation.w])
 
         t3 = msg.header.stamp.secs + msg.header.stamp.nsecs * 1e-9
         # print(t3)
         x3 = msg.pose.pose.position.x
         z3 = msg.pose.pose.position.z
-        print('roll, pitch,yaw')
-        print(roll, pitch, yaw)
+
 
 
         self.converted_msg.x = x3
         self.converted_msg.y = z3
         self.converted_msg.v = velocity(t3, x3, z3)
-        self.converted_msg.hd = pitch
+
+        if len(self.yaw_hist)==0:
+            self.yaw_hist= [yaw]
+            self.converted_msg.hd = -yaw+math.pi/2
+        elif len(self.yaw_hist)==1:
+            self.yaw_hist = [self.yaw_hist[0], yaw]
+            unwrapped = np.unwrap(self.yaw_hist)
+            self.converted_msg.hd = -unwrapped[-1]+math.pi/2
+        else:
+            self.yaw_hist = [self.yaw_hist[-2], self.yaw_hist[-1], yaw]
+            unwrapped = np.unwrap(self.yaw_hist)
+            self.converted_msg.hd = -unwrapped[-1]+math.pi/2
+
+        print(self.converted_msg.hd)
 
         self.pub_localization.publish(self.converted_msg)
 
