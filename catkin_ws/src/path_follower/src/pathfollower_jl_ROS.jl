@@ -1,17 +1,17 @@
 #!/usr/bin/env julia
 
-# works with simulator
+# works with simulator, no localization
 using JuMP
 using Ipopt
 using CSV
 # using IterTools
 # using LinearAlgebra
 using RobotOS
-@rosimport std_msgs.msg: Float64MultiArray
+@rosimport cloud_msgs.msg: mpc_msg
 # @rosimport cloud_msgs.msg: state
 rostypegen()
-using std_msgs.msg
-# using cloud_msgs.msg
+# using std_msgs.msg
+using cloud_msgs.msg
 
 
 global tmp
@@ -27,7 +27,7 @@ function loop(pub_obj)
 
 
         # Import waypoints
-        global arr = CSV.read("/home/uav/catkin_ws/src/path_follower/src/EllipseWaypoints.csv")
+        global arr = CSV.read("/home/uav/catkin_ws/src/path_follower/src/RealWaypoints.csv")
         global waypoints = (convert(Matrix{Float64}, arr))'
         X = waypoints[1,:]
         Y = waypoints[2,:]
@@ -47,8 +47,8 @@ function loop(pub_obj)
     	global final = waypoints[:,end];
 
     	# initialization
-    	global z  = z0;
-    	global z_list = z;
+    	# global z  = z0;
+    	# global z_list = z;
 
     	#set reference velocity
     	global v_ref = 5;
@@ -63,13 +63,13 @@ function loop(pub_obj)
         # println("Length of X:",length(X))
     	#while the model has not reached within a certain tolerance of the end
     	#point
-    	while norm(z[1:2] - final) > 0.2
+    	if norm(z0[1:2] - final) > 0.2
             # println("z[1,2]",z[1:2],"final",final)
             # println("norm:",norm(z[1:2] - final))
-    		global z, final, waypoints, v_ref, i, z0
+    		global final, waypoints, v_ref, i, z0
     		for l in 1:length(X)
-    			global z, waypoints, current_dis
-    			current_dis[l] = norm(waypoints[:,l]-z[1:2])
+    			global waypoints, current_dis, z0
+    			current_dis[l] = norm(waypoints[:,l]-z0[1:2])
     		end
     		current_idx = (find(x->x == minimum(current_dis),current_dis))[1];
             # println("minimum of current_dis:",minimum(current_dis))
@@ -105,39 +105,39 @@ function loop(pub_obj)
     		u[1:2, 1:N]
     		end
 
-    		# Constraints
-    		@constraint(model, cons1, z[:,1] .== z0)
+            # Initialize NLparameter
+            @NLparameter(model, z0_1 == z0[1])
+            @NLparameter(model, z0_2 == z0[2])
+            @NLparameter(model, z0_3 == z0[3])
+            @NLparameter(model, z0_4 == z0[4])
+            @NLparameter(model, goal_1 == 0)
+            @NLparameter(model, goal_2 == 0)
+            @NLparameter(model, goal_3 == v_ref)
+            # Constraints of initial state
+            @NLconstraint(model, cons01, z[1,1] == z0_1)
+            @NLconstraint(model, cons02, z[2,1] == z0_2)
+            @NLconstraint(model, cons03, z[3,1] == z0_3)
+            @NLconstraint(model, cons04, z[4,1] == z0_4)
 
-    		#define cost function
-    		cost = 0;
+            for j in 1:N
+                # Dynamics constraints
+                @NLconstraint(model, z[1,j]+TS*z[3,j]*cos(z[4,j]+u[2,j]) == z[1, j+1])
+                @NLconstraint(model, z[2,j]+TS*z[3,j]*sin(z[4,j]+u[2,j]) == z[2, j+1])
+                @constraint(model, z[3,j]+TS*u[1,j] == z[3, j+1])
+                @NLconstraint(model, z[4,j]+TS*z[3,j]*sin(u[2,j])/1.738 == z[4, j+1])
+                # Input constraints
+                @constraint(model, umin[1] <= u[1, j] <= umax[1])
+                @constraint(model, umin[2] <= u[2, j] <= umax[2])
+                # state constraints
+                @constraint(model, zmin[1] <= z[1, j+1] <= zmax[1])
+                @constraint(model, zmin[2] <= z[2, j+1] <= zmax[2])
+                @constraint(model, zmin[3] <= z[3, j+1] <= zmax[3])
+                @constraint(model, zmin[4] <= z[4, j+1] <= zmax[4])
+            end
 
-    		for j in 1:N
-    			# cost = cost + 5*(z[1, j] - goal[1])^2 + 5*(z[2, j] - goal[2])^2 + 1 * (z[3, j] - goal[3])^2;
-    			# cost = cost + 0.1 * u[1, j]^2 + 0.1 * u[2,j]^2;
-    			# Dynamics constraints
-    			@NLconstraint(model, z[1,j]+TS*z[3,j]*cos(z[4,j]+u[2,j]) == z[1, j+1])
-    			@NLconstraint(model, z[2,j]+TS*z[3,j]*sin(z[4,j]+u[2,j]) == z[2, j+1])
-    			@NLconstraint(model, z[3,j]+TS*u[1,j] == z[3, j+1])
-    			@NLconstraint(model, z[4,j]+TS*z[3,j]*sin(u[2,j])/1.738 == z[4, j+1])
-    			# Input constraints
-    			@constraint(model, umin[1] <= u[1, j] <= umax[1])
-    			@constraint(model, umin[2] <= u[2, j] <= umax[2])
-    			# state constraints
-    			@constraint(model, zmin[1] <= z[1, j+1] <= zmax[1])
-    			@constraint(model, zmin[2] <= z[2, j+1] <= zmax[2])
-    			@constraint(model, zmin[3] <= z[3, j+1] <= zmax[3])
-    			@constraint(model, zmin[4] <= z[4, j+1] <= zmax[4])
-    		end
+            # Cost function
+            @NLobjective(model, Min, sum(5*(z[1, j] - goal_1)^2 + 5*(z[2, j] - goal_2)^2 + 1 * (z[3, j] - goal_3)^2 + 0.1 * u[1, j]^2 + 0.1 * u[2,j]^2 for j in 1:N))
 
-    		for i in 1:N-1
-    			# Input constraints
-    			@constraint(model, -pi/10 <= u[2,i+1] - u[2,i] <= pi/10)
-    		end
-
-    		# Cost function
-    		@NLobjective(model, Min, sum(5*(z[1, j] - goal[1])^2 + 5*(z[2, j] - goal[2])^2 + 1 * (z[3, j] - goal[3])^2 + 0.1 * u[1, j]^2 + 0.1 * u[2,j]^2 for j in 1:N))
-    		# Solve
-    		# status = optimize!(model)
     		status = solve(model)
 
     		# zOpti = JuMP.value.(z)
@@ -145,19 +145,27 @@ function loop(pub_obj)
     		uOpti = getvalue(u)
     		JOpti = getobjectivevalue(model)
 
-
     	    u = uOpti[:, 1];
     	    z = zOpti[:, 2];
 
-    	    global z_list = [z_list, z];
-    	    z0 = z;
     	    i = i + 1;
 
             z_u = [z;u]
             # println(z_u)
 
-    	    pub_data = Float64MultiArray()
-    	    pub_data.data = z_u
+            setvalue(z0_1, z[1,1])
+            setvalue(z0_2, z[2,1])
+            setvalue(z0_3, z[3,1])
+            setvalue(z0_4, z[4,1])
+            z0[1] = z[1,1]
+            z0[2] = z[2,1]
+            z0[3] = z[3,1]
+            z0[4] = z[4,1]
+
+    	    pub_data = mpc_msg()
+            pub_data.z_u = z_u
+            pub_data.pre_x = zOpti[1,:]
+            pub_data.pre_y = zOpti[2,:]
     	    publish(pub_obj, pub_data)
     		# println("Published")
 
@@ -175,7 +183,7 @@ end
 function main()
     init_node("rosjl_example")
     # tmp = state()
-    pub = Publisher{Float64MultiArray}("pts", queue_size=10)
+    pub = Publisher{mpc_msg}("mpc", queue_size=10)
     # pub = Publisher{state}("test",queue_size=10)
     # sub = Subscriber{state}("localization", callback, queue_size=10)
     # spin()

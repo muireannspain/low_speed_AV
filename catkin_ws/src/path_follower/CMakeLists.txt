@@ -10,6 +10,7 @@ project(path_follower)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
+  cloud_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -67,10 +68,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  cloud_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -106,6 +108,7 @@ catkin_package(
 #  LIBRARIES path_follower
 #  CATKIN_DEPENDS rospy std_msgs
 #  DEPENDS system_lib
+#  CATKIN_DEPENDS rospy std_msgs
 )
 
 ###########

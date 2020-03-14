@@ -1,9 +1,6 @@
+#!/usr/bin/env julia
 
 # This version extract the MPC model out
-
-
-
-#!/usr/bin/env julia
 using JuMP
 using Ipopt
 using CSV
