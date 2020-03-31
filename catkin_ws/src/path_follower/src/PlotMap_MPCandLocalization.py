@@ -49,6 +49,14 @@ n=len(wayp)
 waypoints = [list(map(float,i)) for i in wayp]
 waypoints=np.array(waypoints)
 
+opened_file = open('/home/uav/catkin_ws/src/path_follower/src/Pointcloud.csv')
+from csv import reader
+read_file = reader(opened_file)
+points = list(read_file)
+n=len(points)
+p_list = [list(map(float,i)) for i in points]
+p_list=np.array(p_list)
+
 def plotting_func(data):
 
     lf = 1.738
@@ -148,6 +156,7 @@ def run():
         h5.set_data([wheels[0],wheels[1]],[wheels[4],wheels[5]])
         h7.set_data([wheels[2],wheels[3]],[wheels[6],wheels[7]])
         h10.set_data(OL_plotX,OL_plotY)
+        h11=ax.plot(p_list[:,0],p_list[:,1],'b.',markersize=0.5)
 
         start = time.time()
         i=i+1
