@@ -49,7 +49,7 @@ n=len(wayp)
 waypoints = [list(map(float,i)) for i in wayp]
 waypoints=np.array(waypoints)
 
-opened_file = open('/home/uav/catkin_ws/src/path_follower/src/Pointcloud.csv')
+opened_file = open('/home/uav/catkin_ws/src/path_follower/src/NewPointCloud.csv')
 from csv import reader
 read_file = reader(opened_file)
 points = list(read_file)
@@ -131,14 +131,15 @@ def run():
     obj, wheels=plotting_func([0,0,0,0,0,0])
 
 
-    h1 = ax.plot(obj[0], obj[4],'b-',linewidth=10)[0]
-    h2 = ax.plot(obj[1], obj[5], 'b-',linewidth=10)[0]
-    h3 = ax.plot(obj[2], obj[6], 'b-',linewidth=10)[0]
-    h4 = ax.plot(obj[3], obj[7], 'b-',linewidth=10)[0]
-    h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],'r-',linewidth=3)[0]
-    h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],'r-',linewidth=3)[0]
+    h1 = ax.plot(obj[0], obj[4],marker='-',linewidth=10,color='cyan')[0]
+    h2 = ax.plot(obj[1], obj[5], marker='-',linewidth=10,color='cyan')[0]
+    h3 = ax.plot(obj[2], obj[6],marker= '-',linewidth=10,color='cyan')[0]
+    h4 = ax.plot(obj[3], obj[7], marker='-',linewidth=10,color='cyan')[0]
+    h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],marker='-',linewidth=3,color='firebrick')[0]
+    h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],marker='-',linewidth=3,color='firebrick')[0]
     h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'm.')
-    h10=ax.plot(OL_plotX,OL_plotY,'g-',linewidth=3)[0]
+    h10=ax.plot(OL_plotX,OL_plotY,marker='-',linewidth=3, color='forestgreen')[0]
+    h11=ax.plot(p_list[:,0],p_list[:,1],marker='.',markersize=0.5,color='gray')
 
     plt.show()
     tic = time.time()
@@ -156,7 +157,6 @@ def run():
         h5.set_data([wheels[0],wheels[1]],[wheels[4],wheels[5]])
         h7.set_data([wheels[2],wheels[3]],[wheels[6],wheels[7]])
         h10.set_data(OL_plotX,OL_plotY)
-        h11=ax.plot(p_list[:,0],p_list[:,1],'b.',markersize=0.5)
 
         start = time.time()
         i=i+1
