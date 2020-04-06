@@ -131,15 +131,15 @@ def run():
     obj, wheels=plotting_func([0,0,0,0,0,0])
 
 
-    h1 = ax.plot(obj[0], obj[4],marker='-',linewidth=10,color='cyan')[0]
-    h2 = ax.plot(obj[1], obj[5], marker='-',linewidth=10,color='cyan')[0]
-    h3 = ax.plot(obj[2], obj[6],marker= '-',linewidth=10,color='cyan')[0]
-    h4 = ax.plot(obj[3], obj[7], marker='-',linewidth=10,color='cyan')[0]
-    h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],marker='-',linewidth=3,color='firebrick')[0]
-    h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],marker='-',linewidth=3,color='firebrick')[0]
+    h1 = ax.plot(obj[0], obj[4],color='cyan',linestyle='-',linewidth=10)[0]
+    h2 = ax.plot(obj[1], obj[5], color='cyan',linestyle='-',linewidth=10)[0]
+    h3 = ax.plot(obj[2], obj[6],,color='cyan',linestyle= '-',linewidth=10)[0]
+    h4 = ax.plot(obj[3], obj[7], color='cyan',linestyle='-',linewidth=10)[0]
+    h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],color='firebrick',linestyle='-',linewidth=3)[0]
+    h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],color='firebrick',linestyle='-',linewidth=3)[0]
     h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'm.')
-    h10=ax.plot(OL_plotX,OL_plotY,marker='-',linewidth=3, color='forestgreen')[0]
-    h11=ax.plot(p_list[:,0],p_list[:,1],marker='.',markersize=0.5,color='gray')
+    h10=ax.plot(OL_plotX,OL_plotY,color='forestgreen',linestyle='-',linewidth=3)[0]
+    h11=ax.plot(p_list[:,0],p_list[:,1],color='gray',marker='.',markersize=0.5)
 
     plt.show()
     tic = time.time()
