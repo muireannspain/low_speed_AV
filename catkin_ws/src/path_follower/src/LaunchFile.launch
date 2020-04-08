@@ -1,5 +1,5 @@
 <launch>
 	<node name="conversion" pkg="path_follower" type="Conversion_Node.py" />
-	<node name="MPC" pkg="path_follower" type="pathfollower_jl_ROS3.jl" />
+	<node name="path_follower" pkg="path_follower" type="pathfollower_jl_ROS3.jl" />
 	<node name="Plotting" pkg="path_follower" type="PlotMap_MPCandLocalization.py" />
 </launch>
