@@ -138,7 +138,7 @@ def run():
     h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],color='firebrick',linestyle='-',linewidth=3)[0]
     h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],color='firebrick',linestyle='-',linewidth=3)[0]
     h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'k.',markersize=0.6)
-    h10=ax.plot(OL_plotX,OL_plotY,color='forestgreen',linestyle='-',linewidth=3)[0]
+    h10=ax.plot(OL_plotX,OL_plotY,color='yellow',linestyle='-',linewidth=3)[0]
     h11=ax.plot(p_list[:,0],p_list[:,1],'.',color='gray',markersize=0.8)
 
     plt.show()
