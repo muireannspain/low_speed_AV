@@ -15,7 +15,7 @@ using cloud_msgs.msg
 
 
 # Import waypoints
-global arr = CSV.read("/home/uav/catkin_ws/src/path_follower/src/xy_localization.csv")
+global arr = CSV.read("/home/mpc/catkin_ws/src/path_follower/src/xy_localization.csv")
 global waypoints = (convert(Matrix{Float64}, arr))'
 X = waypoints[1,:]
 Y = waypoints[2,:]

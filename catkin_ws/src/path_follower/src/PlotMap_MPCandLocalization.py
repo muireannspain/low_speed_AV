@@ -41,7 +41,7 @@ def callbackLocalization(data):
     #print("loc sub", received_data_localization)
 
 
-opened_file = open('/home/uav/catkin_ws/src/path_follower/src/xy_localization.csv')
+opened_file = open('/home/mpc/catkin_ws/src/path_follower/src/xy_localization.csv')
 from csv import reader
 read_file = reader(opened_file)
 wayp = list(read_file)
@@ -49,7 +49,7 @@ n=len(wayp)
 waypoints = [list(map(float,i)) for i in wayp]
 waypoints=np.array(waypoints)
 
-opened_file = open('/home/uav/catkin_ws/src/path_follower/src/NewPointCloud.csv')
+opened_file = open('/home/mpc/catkin_ws/src/path_follower/src/NewPointCloud.csv')
 from csv import reader
 read_file = reader(opened_file)
 points = list(read_file)
