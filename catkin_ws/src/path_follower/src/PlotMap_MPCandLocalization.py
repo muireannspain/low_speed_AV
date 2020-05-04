@@ -135,7 +135,7 @@ def run():
 #     h1 = ax.plot(obj[0], obj[4], color='cyan',linestyle='-',linewidth=10)[0]
 #     h2 = ax.plot(obj[1], obj[5], color='cyan',linestyle='-',linewidth=10)[0]
 #     h3 = ax.plot(obj[2], obj[6], color='cyan',linestyle= '-',linewidth=10)[0]
-    h4 = ax.plot(x_coordinate, y_coordinate, color='cyan','s',markersize=10)[0]
+    h4 = ax.plot(x_coordinate, y_coordinate,'s', color='cyan',markersize=10)[0]
     h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],color='firebrick',linestyle='-',linewidth=3)[0]
     h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],color='firebrick',linestyle='-',linewidth=3)[0]
     h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'k.',markersize=0.6)
