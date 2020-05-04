@@ -130,11 +130,12 @@ def run():
     #u=np.array(received_data[4:])
     obj, wheels=plotting_func([0,0,0,0,0,0])
 
-
-    h1 = ax.plot(obj[0], obj[4], color='cyan',linestyle='-',linewidth=10)[0]
-    h2 = ax.plot(obj[1], obj[5], color='cyan',linestyle='-',linewidth=10)[0]
-    h3 = ax.plot(obj[2], obj[6], color='cyan',linestyle= '-',linewidth=10)[0]
-    h4 = ax.plot(obj[3], obj[7], color='cyan',linestyle='-',linewidth=10)[0]
+    x_coordinate=np.mean(obj[0],obj[1],obj[2],obj[3])
+    y_coordinate=np.mean(obj[4],obj[5],obj[6],obj[7])
+#     h1 = ax.plot(obj[0], obj[4], color='cyan',linestyle='-',linewidth=10)[0]
+#     h2 = ax.plot(obj[1], obj[5], color='cyan',linestyle='-',linewidth=10)[0]
+#     h3 = ax.plot(obj[2], obj[6], color='cyan',linestyle= '-',linewidth=10)[0]
+    h4 = ax.plot(x_coordinate, y_coordinate, color='cyan','s',markersize=10)[0]
     h5=ax.plot([wheels[0],wheels[1]],[wheels[4],wheels[5]],color='firebrick',linestyle='-',linewidth=3)[0]
     h7=ax.plot([wheels[2],wheels[3]],[wheels[6],wheels[7]],color='firebrick',linestyle='-',linewidth=3)[0]
     h9 = ax.plot(waypoints[:,0], waypoints[:,1], 'k.',markersize=0.6)
@@ -150,10 +151,12 @@ def run():
         #print(received_data)
         # update the xy data
         obj,wheels = plotting_func(received_data)
-        h1.set_data(obj[0], obj[4])
-        h2.set_data(obj[1], obj[5])
-        h3.set_data(obj[2], obj[6])
-        h4.set_data(obj[3], obj[7])
+        x_coordinate=np.mean(obj[0],obj[1],obj[2],obj[3])
+        y_coordinate=np.mean(obj[4],obj[5],obj[6],obj[7])
+#         h1.set_data(obj[0], obj[4])
+#         h2.set_data(obj[1], obj[5])
+#         h3.set_data(obj[2], obj[6])
+        h4.set_data(x_coordinate, y_coordinate)
         h5.set_data([wheels[0],wheels[1]],[wheels[4],wheels[5]])
         h7.set_data([wheels[2],wheels[3]],[wheels[6],wheels[7]])
         h10.set_data(OL_plotX,OL_plotY)
