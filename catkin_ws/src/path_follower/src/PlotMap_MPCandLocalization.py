@@ -164,8 +164,8 @@ def run():
         start = time.time()
         i=i+1
 
-        ax.relim()
-        ax.autoscale_view()
+        #ax.relim()
+        #ax.autoscale_view()
         #ax.axis("equal")
         plt.axis([-10,35, 0,80])
         fig.canvas.draw()
