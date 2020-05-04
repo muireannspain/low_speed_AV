@@ -10,3 +10,9 @@ Environment: Ubuntu
 Make sure you have ROS melodic or kinetic and Julia 0.4v installed
 1. Type 'roslaunch path_follower LaunchFile.launch'
 2. Type 'rosbag play localization.bag'
+
+
+
+Contact
+Muireann Spain
+Wei Hu              azurehw6227@gmail.com
