@@ -1,5 +1,5 @@
 # low_speed_AV
-This is a path following algorithm(MPC) with visualization under ROS archetecture from 2019-2020 MEng Capstone Project: Heavy Load Low Speed AV.
+This is a ROS package including a path following algorithm(MPC) and its visualization. It comes from 2019-2020 MEng Capstone Project: Heavy Load Low Speed AV.
 
 ## Requirements
 - Ubuntu
@@ -19,4 +19,4 @@ This is a path following algorithm(MPC) with visualization under ROS archetectur
 
 ## Contact
 - Muireann Spain: muireann@berkeley.edu
-- Wei Hu:            azurehw6227@gmail.com
+- Wei Hu: wei-hu@berkeley.edu
