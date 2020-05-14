@@ -3,12 +3,10 @@
 This is a path following algorithm with visualization under ROS archetecture.
 
 ## Requirements
--Ubuntu
--ROS melodic or kinetic
--Julia 0.4v
--python
-
-## Documentation
+- Ubuntu
+- ROS melodic or kinetic
+- Julia 0.4v
+- python
 
 ## How to use
 1. Clone this repo.
@@ -21,5 +19,5 @@ This is a path following algorithm with visualization under ROS archetecture.
 `rosbag play localization.bag`
 
 ## Contact
-- Muireann Spain
-- Wei Hu              azurehw6227@gmail.com
+- Muireann Spain:
+- Wei Hu:            azurehw6227@gmail.com
