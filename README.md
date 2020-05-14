@@ -9,13 +9,21 @@ This is a ROS package including a path following algorithm(MPC) and its visualiz
 
 ## How to run
 1. Clone this repo.
-`git clone https://github.com/MPC-Berkeley/low_speed_AV.git`
+```
+git clone https://github.com/MPC-Berkeley/low_speed_AV.git
+```
 2. Create work space.
-`catkin_make`
+```
+catkin_make
+```
 3. Run the package.
-`roslaunch path_follower LaunchFile.launch`
+```
+roslaunch path_follower LaunchFile.launch
+```
 4. Run localization bag.
-`rosbag play localization.bag`
+```
+rosbag play localization.bag
+```
 
 ## Contact
 - Muireann Spain: muireann@berkeley.edu
