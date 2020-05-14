@@ -1,6 +1,5 @@
 # low_speed_AV
-2019-2020 MEng Capstone Project: Heavy Load Low Speed AV
-This is a path following algorithm with visualization under ROS archetecture.
+This is a path following algorithm(MPC) with visualization under ROS archetecture from 2019-2020 MEng Capstone Project: Heavy Load Low Speed AV.
 
 ## Requirements
 - Ubuntu
@@ -8,7 +7,7 @@ This is a path following algorithm with visualization under ROS archetecture.
 - Julia 0.4v
 - python
 
-## How to use
+## How to run
 1. Clone this repo.
 `git clone https://github.com/MPC-Berkeley/low_speed_AV.git`
 2. Create work space.
@@ -19,5 +18,5 @@ This is a path following algorithm with visualization under ROS archetecture.
 `rosbag play localization.bag`
 
 ## Contact
-- Muireann Spain:
+- Muireann Spain: muireann@berkeley.edu
 - Wei Hu:            azurehw6227@gmail.com
