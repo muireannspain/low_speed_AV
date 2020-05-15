@@ -4,8 +4,8 @@ This is a ROS package including a path following algorithm(MPC) and its visualiz
 ## Requirements
 - Ubuntu
 - ROS melodic or kinetic
-- Julia 0.4v
-- python
+- Julia v0.4
+- Python3
 
 ## How to run
 1. Clone this repo.
